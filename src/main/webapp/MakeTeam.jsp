@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>팀만들기</title>
+<title>팀 만들기</title>
 
 </head>
 <body>
