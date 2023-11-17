@@ -9,6 +9,7 @@
 
 </head>
 <body>
+
 <header>
 	<nav>
 		<div class="logo">
@@ -28,36 +29,35 @@
 		</div>
 	</nav>
 </header>
-<main class="body">
-	<form action="" method="post">
-	<div class="class_name">
-	<p>수업명</p>
-	<input type="text" name="class_name_input" id="class_name_input">
-	</div>
-	<div class="team_num">
-	<p>팀 인원</p>
-	<select name="team_num_input" id="team_num_input">
-		<option value="2">2명</option>
-		<option value="3">3명</option>
-		<option value="4">4명</option>
-		<option value="5">5명</option>
-		<option value="6">6명</option>
-		<option value="7">7명</option>
-		<option value="8">8명</option>
-		<option value="9">9명</option>
-	</select>
-	</div>
-	<div class="introduce_team">
-		<p>팀 소개</p>
-		<textarea name="introduce_team_input" id="introduce_team_input"></textarea>
-	</div>
-	<div class="team_requirement">
-		<p>팀원 조건</p>
-		<textarea name="team_requirement _input" id="team_requirement _input"></textarea>
-	</div>
+<main>
+	<form action="" method="post" class="formcontainer">
+		<div class="class_name">
+			<p>수업명</p>
+			<input type="text" name="class_name_input" id="class_name_input" placeholder="공백 없이, 영어는 소문자로 입력, 분반은 수업명 뒤에 바로 붙여서 작성">
+		</div>
+		<div class="team_num">
+			<p>팀 인원</p>
+			<select name="team_num_input" id="team_num_input">
+				<option value="2">2명</option>
+				<option value="3">3명</option>
+				<option value="4">4명</option>
+				<option value="5">5명</option>
+				<option value="6">6명</option>
+				<option value="7">7명</option>
+				<option value="8">8명</option>
+				<option value="9">9명</option>
+			</select>
+		</div>
+		<div class="team_introduction">
+			<p>팀 소개</p>
+			<textarea name="team_introduction_input" id="team_introduction_input" placeholder="팀에 대한 간단한 소개를 작성"></textarea>
+		</div>
+		<div class="team_requirement">
+			<p>팀원 조건</p>
+			<textarea name="team_requirement_input" id="team_requirement_input" placeholder="구하고 싶은 팀원의 조건을 작성"></textarea>
+		</div>
 		<input type="submit" value="파티 만들기" id="SubmitMakeTeam">
 	</form>
-
 </main>
 
 </body>
