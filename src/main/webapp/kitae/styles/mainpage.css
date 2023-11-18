@@ -30,7 +30,7 @@
     object-fit: cover;
     vertical-align: top;
 }
-#logo_word{
+.logo_word{
     padding: 10px;
     font-size: 2.4rem;
     font-weight: 400;
@@ -92,7 +92,10 @@
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 400px; /* Could be more or less, depending on screen size */
+  height: 600px;
+  border-radius: 20px;
+  
 }
 
 /* 닫기 버튼 스타일 */
@@ -108,4 +111,37 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.inputform{
+  display: flex;
+  flex-direction: column;
+}
+h2 {
+  display: inline;
+}
+.inputform label {
+  /* Change the style of the labels */
+  font-family: Inter;
+  color: black;
+  font-weight: 800;
+}
+
+.inputform input[type="text"], .inputform input[type="password"] {
+  /* Change the style of the text and password inputs */
+  font-family: Inter;
+  color: black;
+}
+
+.inputform p {
+  /* Change the style of the paragraph */
+  font-family: Inter;
+  color: black;
+}
+
+.inputform input[type="submit"] {
+  /* Change the style of the submit button */
+  font-family: Inter;
+  color: #fff;
+  background-color: black;
 }
