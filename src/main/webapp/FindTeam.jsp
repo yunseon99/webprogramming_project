@@ -12,7 +12,7 @@
 <header>
 	<nav>
 		<div class="logo">
-			<a href="main.jsp"><img id="logo" src="image/logo.png"></a>
+			<a href="main.jsp"><img id="logo" src="./image/logo.png"></a>
 		</div>
 		<div class="bar">
 			<a href="MakeTeam.jsp">파티 만들기</a>
@@ -28,17 +28,71 @@
 		</div>
 	</nav>
 </header>
-	<div class="team_list">
-	<!-- c:forEach>
-		<div class="team">
-		<form action="" method="post">
-			<input type="button" name="" value="이 파피에 가입요청">
+<main>
+	<div class="search_bar">
+		<form action="" method="get" id="search_bar_form">
+			<input type="text" name="search_input" id="search_input">
+			<input type="submit" id="search_submit"  value="">
 		</form>
-		
-		</div>
-	<-->
-	
 	</div>
+	<div class="select_teams">
+		<div class="select_team">
+			<p class="team_num">1/5</p>
+			<p class="class_name">웹프로그래밍(임시)<p/>
+			<p>팀 소개</p>
+			<div class="print_team_introduction"></div>
+			<p>팀원 조건</p>
+			<div class="print_team_requirement"></div>
+			<form action="" method="post" class="select_team_form">
+				<input type="submit" class="select_team_submit" value="">
+			</form>
+		</div>
+		<div class="select_team">
+			<p class="team_num">1/5</p>
+			<p class="class_name">웹프로그래밍(임시)<p/>
+			<p>팀 소개</p>
+			<div class="print_team_introduction"></div>
+			<p>팀원 조건</p>
+			<div class="print_team_requirement"></div>
+			<form action="" method="post" class="select_team_form">
+				<input type="submit" class="select_team_submit" value="">
+			</form>
+		</div>
+		<div class="select_team">
+			<p class="team_num">1/5</p>
+			<p class="class_name">웹프로그래밍(임시)<p/>
+			<p>팀 소개</p>
+			<div class="print_team_introduction"></div>
+			<p>팀원 조건</p>
+			<div class="print_team_requirement"></div>
+			<form action="" method="post" class="select_team_form">
+				<input type="submit" class="select_team_submit" value="">
+			</form>
+		</div>
+		<div class="select_team">
+			<p class="team_num">1/5</p>
+			<p class="class_name">웹프로그래밍(임시)<p/>
+			<p>팀 소개</p>
+			<div class="print_team_introduction"></div>
+			<p>팀원 조건</p>
+			<div class="print_team_requirement"></div>
+			<form action="" method="post" class="select_team_form">
+				<input type="submit" class="select_team_submit" value="">
+			</form>
+		</div>
+	</div>
+	<div class="page">
+		<div class="previous_page" onclick="">
+			&lt 이전페이지	
+		</div>
+		<div class="slash">
+		&nbsp / &nbsp
+		</div>
+		<div class="next_page" onclick="">
+			다음페이지 &gt
+		</div>
+	</div>
+</main>
 
 </body>
 </html>
