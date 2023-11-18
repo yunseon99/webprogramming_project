@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./styles/mainpage.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A300%2C400%2C600%2C700%2C800"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A300%2C400%2C600%2C700%2C800"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orelega+One%3A400"/>
+        <script>
+            window.onload = function() {
+                // 로그인 링크에 클릭 이벤트 리스너를 추가
+                document.getElementById('loginLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('loginModal').style.display = 'block';
+                });
+            
+                // 닫기 버튼에 클릭 이벤트 리스너를 추가
+                document.getElementById('closeModal').addEventListener('click', function() {
+                    document.getElementById('loginModal').style.display = 'none';
+                });
+            
+                // 모달 창 외부를 클릭하면 모달 창을 닫음
+                window.addEventListener('click', function(event) {
+                    if (event.target == document.getElementById('loginModal')) {
+                        document.getElementById('loginModal').style.display = 'none';
+                    }
+                });
+            }
+            </script>
+    </head>
+    <body>
+        <div class="page">
+            <div class="navbar">
+                <div class="navbar-left">
+                <img id="logo_image"src="./assets/logo.png" alt="Logo">
+                <span id="logo_word">Team up</span>
+                </div>
+                <div class="navbar-right">
+                <a href="#">파티 만들기</a>
+                <a href="#">파티 찾기</a>
+                <!-- 로그인 링크 -->
+                <a href="#" id="loginLink">로그인</a>
+
+                <!-- 모달 창 -->
+                <div id="loginModal" class="modal">
+                    <div class="modal-content">
+                        <span id="closeModal" class="close">&times;</span>
+                        <h2>로그인</h2>
+                        <form>
+                            <label for="username">사용자 이름:</label>
+                            <input type="text" id="username" name="username">
+                            <label for="password">비밀번호:</label>
+                            <input type="password" id="password" name="password">
+                            <input type="submit" value="로그인">
+                        </form>
+                    </div>
+                </div>
+                <a href="#">회원가입</a>
+                <img id="contact_us" src="./assets/contactus.png" alt="Contact Us">
+                </div>
+            </div>
+            <div class="main" style="display: flex;">
+                <div class="wrapper">
+                  <div class="header-text-Vay">
+                    <p class="h1-primary-text">
+                      <span>Great Product is</span>   
+                      <br> 
+                      <span>built by great teams </span>
+                    </p>
+                    <p class="slogan">
+                        <span>We help build and manage a team of world-class developers</span>
+                        <br>
+                        <span>to bring your vision to life</span>
+                    </p>
+                    
+                  </div>
+                  <img id="makepartynow" src="./assets/makepartynow.png" alt="makepartynow">
+                </div>
+                <img id="people" src="./assets/people.png"/>
+              </div>
+              
+        </div>
+    </body>
+    </html> 
