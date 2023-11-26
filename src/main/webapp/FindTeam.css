@@ -151,7 +151,7 @@ main
 
 .select_team
 {
-	background-color: green;
+
 	flex-basis: 20%;
 	height: 600px;
 	padding-right: 10px;
@@ -214,15 +214,32 @@ main
 	width: 125px;
 	height: 25px;
 }
+.select_complete
+{
+	margin:auto;
+	margin-top: 20px;
+	text-align: center;
+	
+}
 
 .page
 {
+	border: 10px;
 	margin:auto;
 	margin-top: 25px;
 }
-.previous_page, .slash, .next_page
+.slash, .previous_page, .next_page
 {
 	float: left;
 	font-size: 20px;
+	
+}
+
+.no_previous_page, .no_next_page
+{
+	
+	float: left;
+	font-size: 20px;
+	color: lightgray;
 	
 }

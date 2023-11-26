@@ -1,14 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
+<%@ page import="com.findteam.*" %>
+<% request.setCharacterEncoding("utf-8");%>
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>팀 만들기</title>
-<link rel="stylesheet" href="FindTeam.css">
+<link rel="stylesheet" href="FindTeam.css?after">
 </head>
 <body>
 
+<%
+	Team_info[] info=(Team_info[])request.getAttribute("info");
+	String search_name= (String)request.getAttribute("search_name");//사용자가 검색바에 입력한 강의이름
+	int current_page=0;
+%>
 <header>
 	<nav>
 		<div class="logo">
@@ -31,67 +40,101 @@
 <main>
 	<div class="search_bar">
 		<form action="" method="get" id="search_bar_form">
-			<input type="text" name="search_input" id="search_input">
+			<input type="text" name="search_input" id="search_input" value="<%=search_name %>">
 			<input type="submit" id="search_submit"  value="">
 		</form>
 	</div>
 	<div class="select_teams">
+	<%
+		for(int i=4*current_page;i<4*current_page+4;i++ ){
+			if(i<info.length){
+	%>
+	
 		<div class="select_team">
-			<p class="team_num">1/5</p>
-			<p class="class_name">웹프로그래밍(임시)<p/>
+			<p class="team_num"><%=info[i].getcount() %>/<%=info[i].gettotal() %></p>
+			<p class="class_name"><%=info[i].getclass_name() %><p/>
 			<p>팀 소개</p>
-			<div class="print_team_introduction"></div>
+			<div class="print_team_introduction"><%=info[i].getintroduction() %></div>
 			<p>팀원 조건</p>
-			<div class="print_team_requirement"></div>
+			<div class="print_team_requirement"><%=info[i].getrequirement() %></div>
+			<%if(info[i].getcheck()) {%>
 			<form action="" method="post" class="select_team_form">
-				<input type="submit" class="select_team_submit" value="">
+				<input type="hidden" value="사용자이름">
+
+				<input type="submit" class="select_team_submit" value="" onclick="submitForm(this);">
 			</form>
-		</div>
-		<div class="select_team">
-			<p class="team_num">1/5</p>
-			<p class="class_name">웹프로그래밍(임시)<p/>
-			<p>팀 소개</p>
-			<div class="print_team_introduction"></div>
-			<p>팀원 조건</p>
-			<div class="print_team_requirement"></div>
-			<form action="" method="post" class="select_team_form">
-				<input type="submit" class="select_team_submit" value="">
-			</form>
-		</div>
-		<div class="select_team">
-			<p class="team_num">1/5</p>
-			<p class="class_name">웹프로그래밍(임시)<p/>
-			<p>팀 소개</p>
-			<div class="print_team_introduction"></div>
-			<p>팀원 조건</p>
-			<div class="print_team_requirement"></div>
-			<form action="" method="post" class="select_team_form">
-				<input type="submit" class="select_team_submit" value="">
-			</form>
-		</div>
-		<div class="select_team">
-			<p class="team_num">1/5</p>
-			<p class="class_name">웹프로그래밍(임시)<p/>
-			<p>팀 소개</p>
-			<div class="print_team_introduction"></div>
-			<p>팀원 조건</p>
-			<div class="print_team_requirement"></div>
-			<form action="" method="post" class="select_team_form">
-				<input type="submit" class="select_team_submit" value="">
-			</form>
-		</div>
+			<script>
+				function submitForm(button){
+					var phonenumber=prompt("전화번호를 입력하세요","");
+					
+					if(phonenumber != null && phonenumber!=""){
+						var form = button.closest('form');
+						var hiddeninput=document.createElement("input");
+						hiddeninput.type="hidden";
+						hiddeninput.name="phonenumber";
+						hiddeninput.value=phonenumber;
+						
+						form.appendChild(hiddeninput);
+						form.submit();
+					}
+
+				}
+				
+			</script>
+			<%
+				}
+			else{
+			%>
+			<div class="select_complete">신청 완료</div>
+			<%
+			}
+			
+			%>
+		</div>	
+	<%
+			}
+		}
+	%>
 	</div>
-	<div class="page">
-		<div class="previous_page" onclick="">
-			&lt 이전페이지	
-		</div>
-		<div class="slash">
-		&nbsp / &nbsp
-		</div>
-		<div class="next_page" onclick="">
-			다음페이지 &gt
-		</div>
+	<div class="page">		
+		<%
+         if(current_page-1>=0){//이전페이지가 있는경우
+      %>
+      <div class="previous_page" onclick="">
+         &lt 이전페이지   
+      </div>
+      <%
+         }
+         else{//이전페이지가 없는경우
+      %>
+      <div class="no_previous_page">
+         &lt 이전페이지   
+      </div>
+      <%
+         }
+      %>
+      <div class="slash">
+      &nbsp / &nbsp
+      </div>
+      <%
+         if(4*current_page+4<info.length){//다음페이지가 있는경우
+      %>
+      <div class="next_page" onclick="">
+         다음페이지 &gt
+      </div>
+      <%
+         }
+         else{//다음페이지가 없는경우
+            
+      %>
+      <div class="no_next_page">
+         다음페이지 &gt
+      </div>
+      <%
+         }
+      %>
 	</div>
+		
 </main>
 
 </body>
