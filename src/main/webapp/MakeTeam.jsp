@@ -25,7 +25,7 @@
 			<a href="MyPage.jsp">마이페이지</a>
 		</div>	
 		<div class="bar">
-			<button id="contact_us_button" type="button" onclick="location.href='contactus.jsp'">Contact us</button>
+			<button id="contact_us_button" type="button" onclick="alert('전화번호 : 000-0000-0000')">Contact us</button>
 		</div>
 	</nav>
 </header>

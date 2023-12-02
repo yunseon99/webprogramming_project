@@ -16,7 +16,7 @@
 <%
 	Team_info[] info=(Team_info[])request.getAttribute("info");
 	String search_name= (String)request.getAttribute("search_name");//사용자가 검색바에 입력한 강의이름
-	int current_page=0;
+	int current_page=(int)request.getAttribute("page");
 %>
 <header>
 	<nav>
@@ -33,7 +33,7 @@
 			<a href="MyPage.jsp">마이페이지</a>
 		</div>	
 		<div class="bar">
-			<button id="contact_us_button" type="button" onclick="location.href='contactus.jsp'">Contact us</button>
+			<button id="contact_us_button" type="button" onclick="alert('전화번호 : 000-0000-0000')">Contact us</button>
 		</div>
 	</nav>
 </header>
@@ -100,9 +100,13 @@
 		<%
          if(current_page-1>=0){//이전페이지가 있는경우
       %>
-      <div class="previous_page" onclick="">
+      <div class="previous_page" onclick="pagecontrol(-1)">
          &lt 이전페이지   
       </div>
+      <form action="" method="post" id="pre">
+      	<input type="hidden" value="<%=current_page-1%>">
+      	<input type="hidden" value="<%=search_name%>">
+      </form>
       <%
          }
          else{//이전페이지가 없는경우
@@ -119,9 +123,13 @@
       <%
          if(4*current_page+4<info.length){//다음페이지가 있는경우
       %>
-      <div class="next_page" onclick="">
+      <div class="next_page" onclick="pagecontrol(1)">
          다음페이지 &gt
       </div>
+      <form action="" method="post" id="next">
+      	<input type="hidden" value="<%=current_page+1%>">
+      	<input type="hidden" value="<%=search_name%>">
+      </form>      
       <%
          }
          else{//다음페이지가 없는경우
@@ -134,6 +142,18 @@
          }
       %>
 	</div>
+	<script>
+		function pagecontrol(int a){
+				if(a<0){
+					 document.getElementById('previous').submit();
+				}
+				else if(a>0){
+					 document.getElementById('next').submit();
+					
+				}
+		}
+				
+	</script>
 		
 </main>
 
