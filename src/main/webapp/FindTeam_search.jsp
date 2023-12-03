@@ -36,6 +36,7 @@
 <main>
 	<div class="search_bar">
 		<form action="" method="get" id="search_bar_form">
+			<input type="hidden" name="page" value="0">
 			<input type="text" name="search_input" id="search_input">
 			<input type="submit" id="search_submit"  value="">
 		</form>

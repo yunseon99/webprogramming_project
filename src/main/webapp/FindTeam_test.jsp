@@ -14,7 +14,7 @@
 	
 	Team_info[] infoa= new Team_info[6];
 	infoa[0] = new Team_info();
-	infoa[0].setcheck(false);
+	infoa[0].setcheck(true);
 	infoa[0].setclass_name("1");
 	infoa[0].setcount(0);
 	infoa[0].settotal(1);

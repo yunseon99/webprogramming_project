@@ -9,6 +9,7 @@ body
 	margin: 0 auto;
 	padding: 0px;
 }
+
 header
 {
 	margin: 0px;
@@ -188,7 +189,7 @@ main
 	height: 170px;
 	
 	background: #FFFFFF;
-	border: 0.6px solid #282828;
+	border: 1px solid #BFB8B8;
 	border-radius: 6px;
 	overflow: auto;
 }
@@ -228,14 +229,14 @@ main
 	margin:auto;
 	margin-top: 25px;
 }
-.slash, .previous_page, .next_page
+.slash, .previous_page
 {
 	float: left;
 	font-size: 20px;
 	
 }
 
-.no_previous_page, .no_next_page
+.no_previous_page
 {
 	
 	float: left;
@@ -243,3 +244,20 @@ main
 	color: lightgray;
 	
 }
+.next_page
+{
+		float: right;
+	font-size: 20px;
+}
+
+
+
+.no_next_page
+{
+	float: right;
+	font-size: 20px;
+	color: lightgray;
+}
+
+
+

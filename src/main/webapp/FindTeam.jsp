@@ -10,12 +10,13 @@
 <meta charset="UTF-8">
 <title>팀 만들기</title>
 <link rel="stylesheet" href="FindTeam.css?after">
+
 </head>
 <body>
 
 <%
 	Team_info[] info=(Team_info[])request.getAttribute("info");
-	String search_name= (String)request.getAttribute("search_name");//사용자가 검색바에 입력한 강의이름
+	String search_name = (String)request.getAttribute("search_name");//사용자가 검색바에 입력한 강의이름
 	int current_page=(int)request.getAttribute("page");
 %>
 <header>
@@ -40,47 +41,30 @@
 <main>
 	<div class="search_bar">
 		<form action="" method="get" id="search_bar_form">
+			<input type="hidden" name="page" value="0">
 			<input type="text" name="search_input" id="search_input" value="<%=search_name %>">
 			<input type="submit" id="search_submit"  value="">
 		</form>
 	</div>
 	<div class="select_teams">
 	<%
-		for(int i=4*current_page;i<4*current_page+4;i++ ){
+		for(int i=4*current_page;i<4*current_page+4;i++){
 			if(i<info.length){
 	%>
 	
 		<div class="select_team">
-			<p class="team_num"><%=info[i].getcount() %>/<%=info[i].gettotal() %></p>
-			<p class="class_name"><%=info[i].getclass_name() %><p/>
-			<p>팀 소개</p>
+			<p class="team_num" style="color: #5F5E61; font-family: 'Poppins';"><%=info[i].getcount() %>/<%=info[i].gettotal() %></p>
+			<p class="class_name" style="color: #5F5E61; font-family: 'Poppins';"><%=info[i].getclass_name() %><p/>
+			<p style="color: #5F5E61; font-family: 'Poppins';">팀 소개</p>
 			<div class="print_team_introduction"><%=info[i].getintroduction() %></div>
-			<p>팀원 조건</p>
+			<p style="color: #5F5E61; font-family: 'Poppins';">팀원 조건</p>
 			<div class="print_team_requirement"><%=info[i].getrequirement() %></div>
 			<%if(info[i].getcheck()) {%>
-			<form action="" method="post" class="select_team_form">
-				<input type="hidden" value="사용자이름">
-
-				<input type="submit" class="select_team_submit" value="" onclick="submitForm(this);">
+			<form action="" method="SendUserInfo.jsp" class="select_team_form">
+				<input type="hidden" value="<%=info[i].getuser() %>" name="user">
+				<input type="hidden" value="<%=info[i].getclass_name() %>" name="class_name">
+				<input type="submit" class="select_team_submit" value="">
 			</form>
-			<script>
-				function submitForm(button){
-					var phonenumber=prompt("전화번호를 입력하세요","");
-					
-					if(phonenumber != null && phonenumber!=""){
-						var form = button.closest('form');
-						var hiddeninput=document.createElement("input");
-						hiddeninput.type="hidden";
-						hiddeninput.name="phonenumber";
-						hiddeninput.value=phonenumber;
-						
-						form.appendChild(hiddeninput);
-						form.submit();
-					}
-
-				}
-				
-			</script>
 			<%
 				}
 			else{
@@ -90,23 +74,26 @@
 			}
 			
 			%>
+			
 		</div>	
 	<%
 			}
 		}
 	%>
 	</div>
-	<div class="page">		
+	<div class="page">	
+	<p>	
 		<%
          if(current_page-1>=0){//이전페이지가 있는경우
       %>
       <div class="previous_page" onclick="pagecontrol(-1)">
-         &lt 이전페이지   
-      </div>
-      <form action="" method="post" id="pre">
+         &lt 이전페이지
+       <form action="" method="post" id="pre">
       	<input type="hidden" value="<%=current_page-1%>">
       	<input type="hidden" value="<%=search_name%>">
-      </form>
+      </form>     
+      </div>
+      
       <%
          }
          else{//이전페이지가 없는경우
@@ -125,11 +112,12 @@
       %>
       <div class="next_page" onclick="pagecontrol(1)">
          다음페이지 &gt
-      </div>
-      <form action="" method="post" id="next">
+       <form action="" method="post" id="next">
       	<input type="hidden" value="<%=current_page+1%>">
       	<input type="hidden" value="<%=search_name%>">
-      </form>      
+      </form>     
+      </div>
+         
       <%
          }
          else{//다음페이지가 없는경우
@@ -141,6 +129,7 @@
       <%
          }
       %>
+      </p>
 	</div>
 	<script>
 		function pagecontrol(int a){
