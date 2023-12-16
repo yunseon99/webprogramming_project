@@ -28,21 +28,36 @@ public class teamupDAO {
 	}
     
 	//add user
-    public boolean addUser(User user) {
-        String sql = "INSERT INTO users (id, password, name, phone) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getPhone());
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+	public boolean addUser(User user) {
+	    String checkDuplicationQuery = "SELECT COUNT(*) FROM users WHERE id = ?";
+
+	    try (Connection conn = getConnection();
+	         PreparedStatement pstmtCheck = conn.prepareStatement(checkDuplicationQuery)) {
+	        
+	        // 사용자 ID 중복 확인
+	        pstmtCheck.setString(1, user.getId());
+	        ResultSet rs = pstmtCheck.executeQuery();
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            return false; // 중복되는 ID가 있으면 false 반환
+	        }
+
+	        // 중복되는 ID가 없으면 사용자 추가
+	        String sql = "INSERT INTO users (id, password, name, phone) VALUES (?, ?, ?, ?)";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, user.getId());
+	            pstmt.setString(2, user.getPassword());
+	            pstmt.setString(3, user.getName());
+	            pstmt.setString(4, user.getPhone());
+	            int affectedRows = pstmt.executeUpdate();
+	            return affectedRows > 0;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
     
     //return user by id
     public User getUserById(String userId) {
@@ -64,7 +79,7 @@ public class teamupDAO {
         return null;
     }
 
-    // add team
+    // create team
     public boolean addTeam(Team team) {
         String sql = "INSERT INTO teams (team_id, class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
@@ -244,6 +259,149 @@ public class teamupDAO {
         }
         return teams;
     }
+    
+    public boolean isUserInClassTeam(String userId, String className) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection(); // 데이터베이스 연결 메소드 호출
+            // 1단계: class_name을 바탕으로 Team 테이블에서 해당 수업의 팀들을 조회
+            String teamQuery = "SELECT team_id FROM Team WHERE class_name = ?";
+            pstmt = conn.prepareStatement(teamQuery);
+            pstmt.setString(1, className);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String teamId = rs.getString("team_id");
+
+                // 2단계: 조회된 team_id와 넘겨받은 user_id를 이용하여 Match 테이블에서 확인
+                String matchQuery = "SELECT COUNT(*) FROM Match WHERE team_id = ? AND id = ?";
+                PreparedStatement pstmtMatch = conn.prepareStatement(matchQuery);
+                pstmtMatch.setString(1, teamId);
+                pstmtMatch.setString(2, userId);
+                ResultSet rsMatch = pstmtMatch.executeQuery();
+                if (rsMatch.next() && rsMatch.getInt(1) > 0) {
+                    return true; // 사용자가 해당 클래스의 팀에 속해 있음
+                }
+            }
+            return false; // 사용자가 해당 클래스의 어떤 팀에도 속해있지 않음
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // 자원 정리
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public boolean makeMatch(Match match) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection(); // 데이터베이스 연결
+
+            // 1단계: team_id를 바탕으로 class_name 추출
+            String classQuery = "SELECT class_name FROM Team WHERE team_id = ?";
+            pstmt = conn.prepareStatement(classQuery);
+            pstmt.setString(1, match.getTeamId());
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String className = rs.getString("class_name");
+
+                // 2단계: user_id와 class_name을 바탕으로 isUserInClassTeam 함수를 이용해 검사
+                if (!isUserInClassTeam(match.getUserId(), className)) {
+                    // 3단계: false일 경우 매치 생성
+                    String insertQuery = "INSERT INTO Match (team_id, id, intro) VALUES (?, ?, ?)";
+                    PreparedStatement pstmtInsert = conn.prepareStatement(insertQuery);
+                    pstmtInsert.setString(1, match.getTeamId());
+                    pstmtInsert.setString(2, match.getUserId());
+                    pstmtInsert.setString(3, match.getIntro());
+                    int result = pstmtInsert.executeUpdate();
+                    return result > 0; // 매치 생성 성공 여부 반환
+                }
+            }
+            return false; // 이미 다른 팀에 속해있거나, class_name을 찾을 수 없는 경우
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // 자원 정리
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean createTeam(String class_name, String masteruser_id, String introduction, 
+		      String requirement, int count, int total) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+		conn = getConnection(); // 데이터베이스 연결
+		
+		// 3단계: masteruser_id와 class_name을 바탕으로 makeMatch 함수 수행
+		Match match = new Match(class_name + masteruser_id, masteruser_id, introduction);
+		if (makeMatch(match)) {
+		// 4단계: makematch가 true이면 새로운 팀을 만들고 데이터베이스에 저장
+		String insertQuery = "INSERT INTO Team (team_id, class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		pstmt = conn.prepareStatement(insertQuery);
+		pstmt.setString(1, class_name + masteruser_id);
+		pstmt.setString(2, class_name);
+		pstmt.setString(3, masteruser_id);
+		pstmt.setString(4, introduction);
+		pstmt.setString(5, requirement);
+		pstmt.setInt(6, count);
+		pstmt.setInt(7, total);
+		int result = pstmt.executeUpdate();
+		return result > 0; // 팀 생성 성공 여부 반환
+		}
+		return false; // 이미 다른 팀에 속해있어 팀을 만들 수 없는 경우
+		} catch (SQLException e) {
+		e.printStackTrace();
+		return false;
+		} finally {
+		// 자원 정리
+		try {
+		if (pstmt != null) pstmt.close();
+		if (conn != null) conn.close();
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+	}
+	}
+
+    
+    public boolean login(String userId, String password) {
+        String query = "SELECT password FROM users WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("password");
+                return dbPassword.equals(password); // 비밀번호 비교
+            } else {
+                return false; // 사용자 ID가 없음
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
 
 
