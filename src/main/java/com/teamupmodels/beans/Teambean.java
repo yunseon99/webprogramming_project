@@ -8,7 +8,7 @@ public class Teambean {
 	private String requirement;	//팀원 조건
 	private int count; 		//현재 팀 인원
 	private int total;		//최대 파티 인원
-
+	
 	private MemberOfTeambean[] members;	//팀에 속해있는 팀장을 제외한 팀원들
 	private MemberOfTeambean[] applicants;//팀에 지원하여 수락을 대기하는 사람들
 	private int apply_index;

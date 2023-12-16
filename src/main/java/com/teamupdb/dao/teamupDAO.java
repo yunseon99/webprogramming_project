@@ -1,4 +1,4 @@
-package com.teamupdb.dao;
+package com.teamupDB.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -235,8 +235,8 @@ public class teamupDAO {
         }
     }
     
-    public List<Team> getTeamsByClassName(String className) throws SQLException {
-        List<Team> teams = new ArrayList<>();
+    public Team[] getTeamsByClassName(String className) throws SQLException {
+        List<Team> teamList = new ArrayList<>();
         String sql = "SELECT * FROM teams WHERE class_name = ?";
 
         try (Connection conn = getConnection();
@@ -253,12 +253,18 @@ public class teamupDAO {
                     team.setReq(rs.getString("requirement"));
                     team.setCount(rs.getInt("count"));
                     team.setTotal(rs.getInt("total"));
-                    teams.add(team);
+                    teamList.add(team);
                 }
             }
         }
+
+        // 리스트를 배열로 변환
+        Team[] teams = new Team[teamList.size()];
+        teams = teamList.toArray(teams);
+
         return teams;
     }
+
     
     public boolean isUserInClassTeam(String userId, String className) {
         Connection conn = null;
@@ -442,6 +448,21 @@ public class teamupDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    
+    //teamid와 userid로 match 삭제
+    public boolean deleteApply(String teamId, String userId) {
+        String sql = "DELETE FROM Apply WHERE team_id = ? AND id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, teamId);
+            pstmt.setString(2, userId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
