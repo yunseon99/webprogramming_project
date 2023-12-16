@@ -1,5 +1,6 @@
 package com.teamup.servlet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,24 +28,27 @@ public class CreateTeamServlet extends HttpServlet {
     	    }
 
         // 폼에서 나머지 팀 데이터 추출
-        String className = request.getParameter("className");
-        String introduction = request.getParameter("introduction");
-        String requirement = request.getParameter("requirement");
-        int count = Integer.parseInt(request.getParameter("count"));
-        int total = Integer.parseInt(request.getParameter("total"));
+        String className = request.getParameter("class_name_input");
+        String introduction = request.getParameter("team_introduction_input");
+        String requirement = request.getParameter("team_requirement_input");
+        int total = Integer.parseInt(request.getParameter("team_num_input"));
 
         // DAO를 통해 데이터베이스에 팀 추가
         teamupDAO dao = new teamupDAO();
         
         // Team 객체 생성 및 데이터 설정
-        boolean result = dao.createTeam(className, masteruserId, introduction, requirement, count, total);
+        boolean result = dao.createTeam(className, masteruserId, introduction, requirement, 1, total);
 
         if (result) {
-            // 팀 생성 성공 처리:  팀 목록 페이지로 리디렉션
-            response.sendRedirect("teamList.jsp"); // 예시 URL
+        	out.println("<script>\r\n"
+        			+ "      alert(\"성공\");\r\n"
+        			+ "       location.href= \"MakeTeam.jsp\";\r\n"
+        			+ "      </script>");
+            
+        	response.sendRedirect("mainpage.jsp");
         } else {
             // 팀 생성 실패 처리: 에러 메시지 출력
-            response.getWriter().println("Failed to create team");
+            response.sendRedirect("MakeTeam.jsp"); 
         }
     }
 }
