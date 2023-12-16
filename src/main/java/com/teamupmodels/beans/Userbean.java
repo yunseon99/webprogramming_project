@@ -5,7 +5,8 @@ public class Userbean {
     private String password;
     private String name;
     private String phone;
-
+    
+    
     // 기본 생성자
     public Userbean() {}
 
