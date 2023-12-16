@@ -126,13 +126,17 @@ h2 {
   color: black;
   font-weight: 800;
 }
-
+.modal{
+  overflow-y: auto;
+}
 .inputform input[type="text"], .inputform input[type="password"] {
   /* Change the style of the text and password inputs */
   font-family: Inter;
   color: black;
 }
-
+.modal-content{
+  overflow-y: auto;
+}
 .inputform p {
   /* Change the style of the paragraph */
   font-family: Inter;
