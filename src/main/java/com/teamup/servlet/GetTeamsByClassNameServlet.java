@@ -19,8 +19,8 @@ public class GetTeamsByClassNameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 요청으로부터 매개변수 추출
     
-        String className = request.getParameter("classname");
-
+        String className = request.getParameter("search_input");
+        String pageinfo = request.getParameter("page");
         // TeamUpDAO를 사용하여 Team 배열을 가져오는 로직
         Teambean[] teams = null;
 		try {
@@ -31,9 +31,10 @@ public class GetTeamsByClassNameServlet extends HttpServlet {
 		}
 
         // 결과를 요청 속성에 저장
-        request.setAttribute("teams", teams);
+        request.setAttribute("info", teams);
+        request.setAttribute("page", pageinfo);
         // JSP 페이지로 요청 전달
-        RequestDispatcher dispatcher = request.getRequestDispatcher("MyPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("FindTeam.jsp");
         dispatcher.forward(request, response);
     }
 }

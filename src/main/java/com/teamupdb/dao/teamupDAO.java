@@ -300,7 +300,7 @@ public class teamupDAO {
         }
     }
     
-    public boolean makeMatch(Match match) {
+    public boolean makeMatch(Matchbean match) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -401,7 +401,49 @@ public class teamupDAO {
             return false;
         }
     }
+    
+    public boolean makeApply(Applybean apply) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection(); // 데이터베이스 연결
 
+            // 1단계: team_id를 바탕으로 class_name 추출
+            String classQuery = "SELECT class_name FROM Team WHERE team_id = ?";
+            pstmt = conn.prepareStatement(classQuery);
+            pstmt.setString(1, apply.getTeamId());
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String className = rs.getString("class_name");
+
+                // 2단계: user_id와 class_name을 바탕으로 isUserInClassTeam 함수를 이용해 검사
+                if (!isUserInClassTeam(apply.getUserId(), className)) {
+                    // 3단계: false일 경우 매치 생성
+                    String insertQuery = "INSERT INTO Match (team_id, id, intro) VALUES (?, ?, ?)";
+                    PreparedStatement pstmtInsert = conn.prepareStatement(insertQuery);
+                    pstmtInsert.setString(1, apply.getTeamId());
+                    pstmtInsert.setString(2, apply.getUserId());
+                    pstmtInsert.setString(3, apply.getIntro());
+                    int result = pstmtInsert.executeUpdate();
+                    return result > 0; // 매치 생성 성공 여부 반환
+                }
+            }
+            return false; // 이미 다른 팀에 속해있거나, class_name을 찾을 수 없는 경우
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // 자원 정리
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
 
