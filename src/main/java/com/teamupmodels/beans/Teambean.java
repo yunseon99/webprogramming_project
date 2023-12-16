@@ -72,5 +72,5 @@ public class Teambean {
 
     public boolean getCheck() {return check;}
     
-    public boolean setCheck(boolean check) {this.check = check;} 
+    public void setCheck(boolean check) {this.check = check;} 
 }
