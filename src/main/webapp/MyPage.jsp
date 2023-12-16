@@ -1,28 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="com.findteam.*" %>
+
 <% request.setCharacterEncoding("utf-8");%>
 <!DOCTYPE html>
 <html>
 <head>
 
 <meta charset="UTF-8">
-<title>팀 만들기</title>
+<title>마이 페이지</title>
 <link rel="stylesheet" href="MyPage.css?after">
 </head>
-<%
-	MyPage_info[] info = (MyPage_info[])request.getAttribute("info");
-	int applicant_num=info.length;
 
-%>
 <body>
 
 
 <header>
 	<nav>
 		<div class="logo">
-			<a href="main.jsp"><img id="logo" src="./image/logo.png"></a>
+			<a href="main.jsp"><img id="logo" src="./image/logo2.png"></a>
 		</div>
 		<div class="bar">
 			<a href="MakeTeam.jsp">파티 만들기</a>
@@ -39,31 +35,82 @@
 	</nav>
 </header>
 <main>
-<div class="text_bar">신청자</div><hr>
-<div class="applicants">
-<%
-	for(int i=0;i<applicant_num;i++){
-%>
 
-	<div class="applicant_bar">
-	<div class="info">
-		제목:&nbsp 
-		<%= info[i].getclass_name() %>
-		&nbsp 아이디: &nbsp 
-		<%= info[i].getapplicant() %>
-		&nbsp 전화번호: &nbsp
-		<%= info[i].getphonenumber() %>
-	</div>
-		<form action="" method="get" class="plus_team">
-			<input type="submit" name="accept"  value="수락" class="submit_button">
-			<input type="submit" name="refuse" value="거절" class="submit_button">
-		</form>
+	<div class="team">
+		<div class="class_name">웹프로그래밍</div>
+		<div class="exit">
+			<form class="exit_form">
+				<input type="hidden" value="팀 고유 id" name="team_id">
+				<input type="submit" value="탈퇴" name="exit" class="exit_button">
+			</form>	
+		</div>
+		<br><br>
+		<div class="for_flex">
+		<div class="team_total_member">
+			<div class="team_leader">팀장 : 가나다</div>
+			<br>
+			<div class="team_members">
+				<div class="team_member">팀원 1 : <a href="SeeUserInfo.jsp?name=<%="a"%>&major=<%="a"%>&student_num=<%="a"%>&grade=<%="a"%>&self_introduction=<%="a"%>">000</a> hp : 000-0000-0000</div>
+				<div class="team_member">팀원 2 : <a>000</a> hp : 000-0000-0000</div>
+				<div class="team_member">팀원 3 : <a>000</a> hp : 000-0000-0000</div>
+				<div class="team_member">팀원 4 : <a>000</a> hp : 000-0000-0000</div>
+				<div class="team_member">팀원 5 : <a>000</a> hp : 000-0000-0000</div>
+				<div class="team_member">팀원 6 : <a>000</a> hp : 000-0000-0000</div>
+			</div>
+		</div>
+		<div class="accept_team">
+			<div class="title">신청자</div>
+			<br>
+			<div class="want_team_boader">
+				<div class="want_team">
+					<div class="want_id">신청자1 : <a href="SeeUserInfo.jsp?name=<%="a"%>&major=<%="a"%>&student_num=<%="a"%>&grade=<%="a"%>&self_introduction=<%="a"%>">ㅁㅁㅁ</a> hp : 000-0000-0000</div>
+					<form class="want_form">
+						<input type="hidden" value="신청자id" name="want_join_id">
+						<input type="hidden" value="팀 고유 id" name="team_id">
+						<input type="submit" value="거절" name="choice" class="choice_button">
+						<input type="submit" value="수락" name="choice" class="choice_button">
+						
+					</form>
+				</div>
+			
+				<div class="want_team">
+					<div class="want_id">신청자2 : <a>ㅁㅁㅁ</a> hp : 000-0000-0000</div>
+					<form class="want_form">
+						<input type="hidden" value="신청자id">
+						<input type="hidden" value="팀 고유 id" name="team_id">
+						<input type="submit" value="거절" name="choice" class="choice_button">
+						<input type="submit" value="수락" name="choice" class="choice_button">
+						
+					</form>
+				</div>
+			
+				<div class="want_team">
+					<div class="want_id">신청자3 : <a>ㅁㅁㅁ</a> hp : 000-0000-0000</div>
+					<form class="want_form">
+						<input type="hidden" value="신청자id">
+						<input type="hidden" value="팀 고유 id" name="team_id">
+						<input type="submit" value="거절" name="choice" class="choice_button">
+						<input type="submit" value="수락" name="choice" class="choice_button">
+						
+					</form>
+				</div>
+			
+				<div class="want_team">
+					<div class="want_id">신청자4 : <a>ㅁㅁㅁ</a> hp : 000-0000-0000</div>
+					<form class="want_form">
+						<input type="hidden" value="신청자id">
+						<input type="hidden" value="팀 고유 id" name="team_id">
+						<input type="submit" value="거절" name="choice" class="choice_button">
+						<input type="submit" value="수락" name="choice" class="choice_button">
+						
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
+		<br>
 	</div>
 
-<%
-	}
-%>
-</div>
 </main>
 
 </body>

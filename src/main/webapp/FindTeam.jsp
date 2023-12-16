@@ -1,28 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="com.findteam.*" %>
+<%@ page import="com.teamup.model.*" %>
 <% request.setCharacterEncoding("utf-8");%>
 <!DOCTYPE html>
 <html>
 <head>
 
 <meta charset="UTF-8">
-<title>팀 만들기</title>
+<title>팀 찾기</title>
 <link rel="stylesheet" href="FindTeam.css?after">
 
 </head>
 <body>
 
 <%
-	Team_info[] info=(Team_info[])request.getAttribute("info");
+	List<Team> info=(List<Team>)request.getAttribute("info");
 	String search_name = (String)request.getAttribute("search_name");//사용자가 검색바에 입력한 강의이름
 	int current_page=(int)request.getAttribute("page");
 %>
 <header>
 	<nav>
 		<div class="logo">
-			<a href="main.jsp"><img id="logo" src="./image/logo.png"></a>
+			<a href="main.jsp"><img id="logo" src="./image/logo2.png"></a>
 		</div>
 		<div class="bar">
 			<a href="MakeTeam.jsp">파티 만들기</a>
@@ -49,20 +49,21 @@
 	<div class="select_teams">
 	<%
 		for(int i=4*current_page;i<4*current_page+4;i++){
-			if(i<info.length){
+			if(i<info.size()){
 	%>
 	
 		<div class="select_team">
-			<p class="team_num" style="color: #5F5E61; font-family: 'Poppins';"><%=info[i].getcount() %>/<%=info[i].gettotal() %></p>
-			<p class="class_name" style="color: #5F5E61; font-family: 'Poppins';"><%=info[i].getclass_name() %><p/>
+			<p class="team_num" style="color: #5F5E61; font-family: 'Poppins';"><%=info.get(i).getCount() %>/<%=info.get(i).getTotal() %></p>
+			<p class="class_name" style="color: #5F5E61; font-family: 'Poppins';"><%=info.get(i).getClassName() %><p/>
 			<p style="color: #5F5E61; font-family: 'Poppins';">팀 소개</p>
-			<div class="print_team_introduction"><%=info[i].getintroduction() %></div>
+			<div class="print_team_introduction"><%=info.get(i).getIntro() %></div>
 			<p style="color: #5F5E61; font-family: 'Poppins';">팀원 조건</p>
-			<div class="print_team_requirement"><%=info[i].getrequirement() %></div>
-			<%if(info[i].getcheck()) {%>
-			<form action="" method="SendUserInfo.jsp" class="select_team_form">
-				<input type="hidden" value="<%=info[i].getuser() %>" name="user">
-				<input type="hidden" value="<%=info[i].getclass_name() %>" name="class_name">
+			<div class="print_team_requirement"><%=info.get(i).getReq() %></div>
+			<%if(info.get(i).getcheck()) {%>
+			<form action="SendUserInfo.jsp" method="post" class="select_team_form">
+				<input type="hidden" value="<%=info.get(i).getTeamId() %>" name="team_id">
+				<input type="hidden" value="<%=current_page%>" name="page">
+				<input type="hidden" value="<%=search_name%>" name="search_input">
 				<input type="submit" class="select_team_submit" value="">
 			</form>
 			<%
@@ -89,8 +90,8 @@
       <div class="previous_page" onclick="pagecontrol(-1)">
          &lt 이전페이지
        <form action="" method="post" id="pre">
-      	<input type="hidden" value="<%=current_page-1%>">
-      	<input type="hidden" value="<%=search_name%>">
+      	<input type="hidden" value="<%=current_page-1%>" name="page">
+      	<input type="hidden" value="<%=search_name%>" name="search_input">
       </form>     
       </div>
       
@@ -113,8 +114,8 @@
       <div class="next_page" onclick="pagecontrol(1)">
          다음페이지 &gt
        <form action="" method="post" id="next">
-      	<input type="hidden" value="<%=current_page+1%>">
-      	<input type="hidden" value="<%=search_name%>">
+      	<input type="hidden" value="<%=current_page+1%>" name="page">
+      	<input type="hidden" value="<%=search_name%>" name="search_input">
       </form>     
       </div>
          

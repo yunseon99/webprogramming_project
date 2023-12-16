@@ -5,15 +5,12 @@
 <head>
 <% request.setCharacterEncoding("utf-8");%>
 <meta charset="UTF-8">
-<title>신청서 작성</title>
+<title>신청서 보기</title>
 <link rel="stylesheet" href="SendUserInfo.css?after">
 </head>
 <body>
 <%
 
-	String current_page = request.getParameter("page");
-	String team_id=request.getParameter("team_id");
-	String search_name = (String)request.getAttribute("search_name");
 %>
 <header>
 	<nav>
@@ -39,30 +36,28 @@
 	<form action="" method="post" class="formcontainer">
 		<div class="name">
 			<p>이름</p>
-			<input type="text" name="name_input" id="name_input">
+			<input type="text" name="name_input" id="name_input" value="<%=request.getParameter("name") %>" disabled>
 		</div>
 		<div class="major">
 			<p>학과</p>
-			<input type="text" name="major_input" id="major_input">
+			<input type="text" name="major_input" id="major_input" value="<%=request.getParameter("major") %>" disabled>
 		</div>
 		<div class="student_num">
 			<p>학번</p>
-			<input type="text" name="student_num_input" id="student_num_input">
+			<input type="text" name="student_num_input" id="student_num_input" value="<%=request.getParameter("student_num") %>" disabled>
 		</div>
 		<div class="grade">
 			<p>학년</p>
-			<input type="text" name="grade_input" id="grade_input">
+			<input type="text" name="grade_input" id="grade_input" value="<%=request.getParameter("grade") %>" disabled>
 		</div>
 
 		<div class="self_introduction">
 			<p>자기 소개</p>
-			<textarea name="self_introduction_input" id="self_introduction_input"></textarea>
+			<textarea name="self_introduction_input" id="self_introduction_input" disabled><%=request.getParameter("self_introduction") %></textarea>
 		</div>
 		
-		<input type="hidden" name="team_id" value="<%= team_id%>">
-		<input type="hidden" value="<%=current_page%>" name="page">
-		<input type="hidden" value="<%=search_name%>" name="search_input">
-		<input type="submit" value="가입 신청" id="SubmitMakeTeam">
+
+		<input type="submit" value="돌아가기" id="SubmitMakeTeam">
 	</form>
 </main>
 

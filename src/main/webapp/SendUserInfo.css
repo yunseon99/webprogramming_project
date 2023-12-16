@@ -1,6 +1,7 @@
 @charset "UTF-8";
 body
 {
+	width: 100%;
 	background-color: #F9F9FF;
 	overflow: auto;
 	font-family: 'Inter';

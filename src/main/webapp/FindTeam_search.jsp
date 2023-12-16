@@ -5,7 +5,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title>팀 만들기</title>
+<title>팀 찾기</title>
 <link rel="stylesheet" href="FindTeam.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
 <header>
 	<nav>
 		<div class="logo">
-			<a href="main.jsp"><img id="logo" src="./image/logo.png"></a>
+			<a href="main.jsp"><img id="logo" src="./image/logo2.png"></a>
 		</div>
 		<div class="bar">
 			<a href="MakeTeam.jsp">파티 만들기</a>

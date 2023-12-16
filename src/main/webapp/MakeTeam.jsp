@@ -13,7 +13,7 @@
 <header>
 	<nav>
 		<div class="logo">
-			<a href="main.jsp"><img id="logo" src="image/logo.png"></a>
+			<a href="main.jsp"><img id="logo" src="image/logo2.png"></a>
 		</div>
 		<div class="bar">
 			<a href="MakeTeam.jsp">파티 만들기</a>
