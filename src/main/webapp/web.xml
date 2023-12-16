@@ -35,14 +35,14 @@
         <url-pattern>/createTeam</url-pattern>
     </servlet-mapping>
     
-    <!-- GetTeamsByClassNameServlet Mapping -->
+    <!-- GetTeamsByClassNameAndMasterIdServlet Mapping -->
     <servlet>
-        <servlet-name>GetTeamsByClassNameServlet</servlet-name>
-        <servlet-class>servlets.GetTeamsByClassNameServlet</servlet-class>
+        <servlet-name>GetTeamsByClassNameAndMasterIdServlet</servlet-name>
+        <servlet-class>servlets.GetTeamsByClassNameAndMasterIdServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>GetTeamsByClassNameServlet</servlet-name>
-        <url-pattern>/getTeamsByClassName</url-pattern>
+        <servlet-name>GetTeamsByClassNameAndMasterIdServlet</servlet-name>
+        <url-pattern>/getTeamsByClassNameAndMasterId</url-pattern>
     </servlet-mapping>
 
 </web-app>
