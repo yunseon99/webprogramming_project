@@ -13,20 +13,22 @@ public class Pre_MypageServlet extends HttpServlet {
 
     public Pre_MypageServlet() {
         this.teamDAO = new teamupDAO(); // TeamUpDAO 초기화
+        
+        HttpSession session = request.getSession(false); // false: 새 세션 생성 방지
+    	String user_Id = null;
+
+    	    if (session != null) {
+    	       user_Id = (String) session.getAttribute("id");
+    	    }
+
+    	    if (masteruserId == null) {
+    	        // 로그인하지 않은 경우 처리
+    	        response.sendRedirect("login.jsp"); // 로그인 페이지로 리디렉션
+    	        return; // 메소드 종료
+    	    }
     }
 
-    HttpSession session = request.getSession(false); // false: 새 세션 생성 방지
-	String user_Id = null;
-
-	    if (session != null) {
-	       user_Id = (String) session.getAttribute("id");
-	    }
-
-	    if (masteruserId == null) {
-	        // 로그인하지 않은 경우 처리
-	        response.sendRedirect("login.jsp"); // 로그인 페이지로 리디렉션
-	        return; // 메소드 종료
-	    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
@@ -34,6 +36,7 @@ public class Pre_MypageServlet extends HttpServlet {
     	Teambean[] teams = null; // 로그인한 사용자가 참가 중인 팀들
     	
 		//Need to be implemented..!!
+    	//로그인한 사용자가 가입한 팀들 리턴 + 해당 팀들의 팀장 id
 
         // 결과를 요청 속성에 저장
         request.setAttribute("leader", masters);

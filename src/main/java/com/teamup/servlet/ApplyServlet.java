@@ -39,7 +39,7 @@ public class ApplyServlet extends HttpServlet {
      // userId가 null이 아닌 경우, 사용자가 로그인한 것으로 간주
         if (userId != null) {
             Applybean ap = new Applybean(team_id,userId,self_introduction);
-            isappliable = makeApply(ap);
+            isappliable = teamDAO.makeApply(ap);
         } 
         
         // 결과를 요청 속성에 저장

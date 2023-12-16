@@ -12,6 +12,7 @@ public class Teambean {
 	private MemberOfTeambean[] members;	//팀에 속해있는 팀장을 제외한 팀원들
 	private MemberOfTeambean[] applicants;//팀에 지원하여 수락을 대기하는 사람들
 	private int apply_index;
+	private boolean check;
 	
     public Teambean() {}
     public Teambean(String class_name, 
@@ -68,4 +69,8 @@ public class Teambean {
     public MemberOfTeambean[] getMembers() {return members;}
     
     public void setMembers(MemberOfTeambean member) {this.members[count++ - 1] = member;}
+
+    public boolean getCheck() {return check;}
+    
+    public boolean setCheck(boolean check) {this.check = check;} 
 }

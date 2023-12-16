@@ -42,10 +42,9 @@ public class CreateTeamServlet extends HttpServlet {
         if (result) {
         	out.println("<script>\r\n"
         			+ "      alert(\"성공\");\r\n"
-        			+ "       location.href= \"MakeTeam.jsp\";\r\n"
+        			+ "       location.href= \"mainpage.jsp\";\r\n"
         			+ "      </script>");
             
-        	response.sendRedirect("mainpage.jsp");
         } else {
             // 팀 생성 실패 처리: 에러 메시지 출력
             response.sendRedirect("MakeTeam.jsp"); 
