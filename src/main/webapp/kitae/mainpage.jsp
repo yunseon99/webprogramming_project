@@ -1,63 +1,66 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- 여기에 헤드 태그 내용을 넣으세요 -->
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="./styles/mainpage.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A300%2C400%2C600%2C700%2C800"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A300%2C400%2C600%2C700%2C800"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orelega+One%3A400"/>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins'>
+<meta charset="UTF-8">
+<title>Team up</title>
+<meta charset="utf-8" />
+        <link rel="stylesheet" href="./styles/mainpage.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A300%2C400%2C600%2C700%2C800"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A300%2C400%2C600%2C700%2C800"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orelega+One%3A400"/>
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins'>
+        <script>
+            window.onload = function() {
+                // 로그인 링크에 클릭 이벤트 리스너를 추가
+                document.getElementById('loginLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('loginModal').style.display = 'block';
+                });
+                
+                // 닫기 버튼에 클릭 이벤트 리스너를 추가
+                document.getElementById('closeModal').addEventListener('click', function() {
+                    document.getElementById('loginModal').style.display = 'none';
+                });
+            
+                // 모달 창 외부를 클릭하면 모달 창을 닫음
+                window.addEventListener('click', function(event) {
+                    if (event.target == document.getElementById('loginModal')) {
+                        document.getElementById('loginModal').style.display = 'none';
+                    }
+                });
+
+                // 회원가입 링크에 클릭 이벤트 리스너를 추가
+                document.getElementById('signupLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('signupModal').style.display = 'block';
+                });
+                
+                // 닫기 버튼에 클릭 이벤트 리스너를 추가
+                document.getElementById('closeModal').addEventListener('click', function() {
+                    document.getElementById('signupModal').style.display = 'none';
+                });
+
+                // 모달 창 외부를 클릭하면 모달 창을 닫음
+                window.addEventListener('click', function(event) {
+                    if (event.target == document.getElementById('signupModal')) {
+                        document.getElementById('signupModal').style.display = 'none';
+                    }
+                });
+            }
+            </script>
 </head>
 <body>
-    <!-- 여기에 바디 태그 내용을 넣으세요 -->
-    <script>
-        // 로그인 링크에 클릭 이벤트 리스너를 추가
-        document.getElementById('loginLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('loginModal').style.display = 'block';
-        });
-
-        // 닫기 버튼에 클릭 이벤트 리스너를 추가
-        document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('loginModal').style.display = 'none';
-        });
-
-        // 모달 창 외부를 클릭하면 모달 창을 닫음
-        window.addEventListener('click', function(event) {
-            if (event.target == document.getElementById('loginModal')) {
-                document.getElementById('loginModal').style.display = 'none';
-            }
-        });
-
-        // 회원가입 링크에 클릭 이벤트 리스너를 추가
-        document.getElementById('signupLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('signupModal').style.display = 'block';
-        });
-
-        // 닫기 버튼에 클릭 이벤트 리스너를 추가
-        document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('signupModal').style.display = 'none';
-        });
-
-        // 모달 창 외부를 클릭하면 모달 창을 닫음
-        window.addEventListener('click', function(event) {
-            if (event.target == document.getElementById('signupModal')) {
-                document.getElementById('signupModal').style.display = 'none';
-            }
-        });
-    </script>
-    <div class="page">
+	<div class="page">
             <div class="navbar">
                 <div class="navbar-left">
                 <img id="logo_image"src="./assets/logo.png" alt="Logo">
                 <span class="logo_word">Team up</span>
                 </div>
                 <div class="navbar-right">
-                <a href="#">파티 만들기</a>
-                <a href="#">파티 찾기</a>
+                <a href="../MakeTeam.jsp">파티 만들기</a>
+                <a href="../FindTeam.jsp">파티 찾기</a>
                 <!-- 로그인 링크 -->
                 <a href="#" id="loginLink">로그인</a>
 
@@ -98,13 +101,13 @@
                             <br>
                             <input type="text" id="username" name="username" placeholder="Enter your user name" style="border-radius: 5px; height: 50px">
                             <br>
-                            <label for="password">비밀번호</label>
-                            <br>
-                            <input type="password" id="password" name="password" placeholder="Enter your password" style="border-radius: 5px; height: 50px">
-                            <br>
                             <label for="phone">전화번호</label>
                             <br>
                             <input type="text" id="phone" name="phone" placeholder="Enter your phone number" style="border-radius: 5px; height: 50px">
+                            <br>
+                            <label for="password">비밀번호</label>
+                            <br>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" style="border-radius: 5px; height: 50px">
                             <br>
                             <label for="confirmPassword">비밀번호 확인</label>
                             <br>
@@ -118,7 +121,6 @@
                 <img id="contact_us" src="./assets/contactus.png" alt="Contact Us">
                 </div>
             </div>
-
             <div class="main" style="display: flex;">
                 <div class="wrapper">
                   <div class="header-text-Vay">
@@ -137,7 +139,8 @@
                   <img id="makepartynow" src="./assets/makepartynow.png" alt="makepartynow">
                 </div>
                 <img id="people" src="./assets/people.png"/>
-              </div>    
+              </div>
+              
         </div>
 </body>
 </html>

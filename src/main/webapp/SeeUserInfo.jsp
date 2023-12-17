@@ -10,6 +10,18 @@
 </head>
 <body>
 <%
+	if(session.getAttribute("userid")==null){
+		%>
+		<script>
+		alert("로그인을 먼저 해주세요");
+ 		location.href= "MakeTeam.jsp";
+		</script>
+		
+		<%
+	}
+%>
+
+<%
 
 %>
 <header>

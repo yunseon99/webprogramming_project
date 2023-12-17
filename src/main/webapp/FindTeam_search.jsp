@@ -9,6 +9,17 @@
 <link rel="stylesheet" href="FindTeam.css">
 </head>
 <body>
+<%
+	if(session.getAttribute("userid")==null){
+		%>
+		<script>
+		alert("로그인을 먼저 해주세요");
+ 		location.href= "MakeTeam.jsp";
+		</script>
+		
+		<%
+	}
+%>
 
 <%
 	//탐찾기에 들어가면 이 페이지를 거치고 FindTeam.jsp로
@@ -28,6 +39,9 @@
 		<div class="bar">
 			<a href="MyPage.jsp">마이페이지</a>
 		</div>	
+		<div class="bar">
+			<a href="Logout.jsp">로그아웃</a>
+		</div>
 		<div class="bar">
 			<button id="contact_us_button" type="button" onclick="alert('전화번호 : 000-0000-0000')">Contact us</button>
 		</div>
