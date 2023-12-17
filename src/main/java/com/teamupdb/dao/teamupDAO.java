@@ -8,14 +8,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.teamup.model.User;
-import com.teamup.model.Team;
-import com.teamup.model.Match;
+import com.teamupmodels.Userbean;
+import com.teamupmodels.Teambean;
+import com.teamupmodels.Matchbean;
+import com.teamupmodels.MemberOfTeambean;
+import com.teamupmodels.Applybean;
 
 public class teamupDAO {
+	
+	//DB URL
 	private String dbUrl = "jdbc:mysql://localhost:3306/TeamUp_DB";
 
-	// 데이터베이스 연결 메소드 
+	//CONNECT TO DB 
 	public Connection getConnection() {
 		 try {
 	         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -27,9 +31,10 @@ public class teamupDAO {
 	     }
 	}
     
-	//add user
-	public boolean addUser(User user) {
-	    String checkDuplicationQuery = "SELECT COUNT(*) FROM users WHERE id = ?";
+	/* USER TABLE CRUD */
+	//(CREATE) 새로운 user 등록
+	public boolean addUser(Userbean user) {
+	    String checkDuplicationQuery = "SELECT COUNT(*) FROM User WHERE id = ?";
 
 	    try (Connection conn = getConnection();
 	         PreparedStatement pstmtCheck = conn.prepareStatement(checkDuplicationQuery)) {
@@ -42,7 +47,7 @@ public class teamupDAO {
 	        }
 
 	        // 중복되는 ID가 없으면 사용자 추가
-	        String sql = "INSERT INTO users (id, password, name, phone) VALUES (?, ?, ?, ?)";
+	        String sql = "INSERT INTO User (id, password, name, phone) VALUES (?, ?, ?, ?)";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	            pstmt.setString(1, user.getId());
 	            pstmt.setString(2, user.getPassword());
@@ -59,15 +64,15 @@ public class teamupDAO {
 	}
 
     
-    //return user by id
-    public User getUserById(String userId) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+    //(READ) return user by id
+    public Userbean getUserById(String userId) {
+        String sql = "SELECT * FROM User WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                User user = new User(rs.getString("id"),
+                Userbean user = new Userbean(rs.getString("id"),
                 		rs.getString("password"),
                 		rs.getString("name"),
                 		rs.getString("phone"));
@@ -78,52 +83,10 @@ public class teamupDAO {
         }
         return null;
     }
-
-    // create team
-    public boolean addTeam(Team team) {
-        String sql = "INSERT INTO teams (team_id, class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, team.getTeamId());
-            pstmt.setString(2, team.getClassName());
-            pstmt.setString(3, team.getMasteruser());
-            pstmt.setString(4, team.getIntro());
-            pstmt.setString(5, team.getReq());
-            pstmt.setInt(6, team.getCount());
-            pstmt.setInt(7, team.getTotal());
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    //return team by id
-    public Team getTeamById(String teamId) {
-        String sql = "SELECT * FROM teams WHERE team_id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, teamId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Team team = new Team(rs.getString("team_id"),
-                		rs.getString("class_name"),
-                		rs.getString("masteruser_id"),
-                		rs.getString("introduction"),
-                		rs.getString("requirement"),
-                		rs.getInt("count"),rs.getInt("total"));
-                return team;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
     
-    // User 정보 업데이트
-    public boolean updateUser(User user) {
-        String sql = "UPDATE users SET password = ?, name = ?, phone = ? WHERE id = ?";
+    //(UPDATE) User 정보 업데이트
+    public boolean updateUser(Userbean user) {
+        String sql = "UPDATE User SET password = ?, name = ?, phone = ? WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getPassword());
@@ -137,10 +100,10 @@ public class teamupDAO {
             return false;
         }
     }
-
-    // id로 User 정보 삭제
+    
+    //(DELETE) id로 User 삭제
     public boolean deleteUser(String userId) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM User WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userId);
@@ -151,10 +114,12 @@ public class teamupDAO {
             return false;
         }
     }
+    /* USER TABLE CRUD END */
     
-    // Team 정보 업데이트
-    public boolean updateTeam(Team team) {
-        String sql = "UPDATE teams SET class_name = ?, masteruser_id = ?, introduction = ?, requirement = ?, count = ?, total = ? WHERE team_id = ?";
+    /* TEAM TABLE CRUD */
+    // (CREATE) create team
+    public boolean addTeam(Teambean team) {
+        String sql = "INSERT INTO Team (class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, team.getClassName());
@@ -163,7 +128,6 @@ public class teamupDAO {
             pstmt.setString(4, team.getReq());
             pstmt.setInt(5, team.getCount());
             pstmt.setInt(6, team.getTotal());
-            pstmt.setString(7, team.getTeamId());
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -171,48 +135,59 @@ public class teamupDAO {
             return false;
         }
     }
-
-    // teamid로 Team 정보 삭제
-    public boolean deleteTeam(String teamId) {
-        String sql = "DELETE FROM teams WHERE team_id = ?";
+    // team객체가아닌 string들로 team 생성
+    public boolean addTeam(String class_name, String masteruser_id, String introduction, 
+		      String requirement, int count, int total) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+		conn = getConnection(); // 데이터베이스 연결
+		
+		// 3단계: masteruser_id와 class_name을 바탕으로 makeMatch 함수 수행
+		Match match = new Match(class_name + masteruser_id, masteruser_id, introduction);
+		if (makeMatch(match)) {
+		// 4단계: makematch가 true이면 새로운 팀을 만들고 데이터베이스에 저장
+		String insertQuery = "INSERT INTO Team (class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?)";
+		pstmt = conn.prepareStatement(insertQuery);
+		pstmt.setString(1, class_name);
+		pstmt.setString(2, masteruser_id);
+		pstmt.setString(3, introduction);
+		pstmt.setString(4, requirement);
+		pstmt.setInt(5, count);
+		pstmt.setInt(6, total);
+		int result = pstmt.executeUpdate();
+		return result > 0; // 팀 생성 성공 여부 반환
+		}
+		return false; // 이미 다른 팀에 속해있어 팀을 만들 수 없는 경우
+		} catch (SQLException e) {
+		e.printStackTrace();
+		return false;
+		} finally {
+		// 자원 정리
+		try {
+		if (pstmt != null) pstmt.close();
+		if (conn != null) conn.close();
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+	}
+	}
+    
+    // (READ) return team by id
+    public Teambean getTeamById(String teamId) {
+        String sql = "SELECT * FROM Team WHERE team_id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, teamId);
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
- // add match
-    public boolean addMatch(Match match) {
-        String sql = "INSERT INTO match (team_id, id) VALUES (?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, match.getTeamId());
-            pstmt.setString(2, match.getUserId());
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    public Match getMatchByUserId(String userId) {
-        String sql = "SELECT * FROM match WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, userId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    Match match = new Match();
-                    match.setTeamId(rs.getString("team_id"));
-                    match.setUserId(rs.getString("id"));
-                    return match;
-                }
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Teambean team = new Teambean(rs.getString("team_id"),
+                		rs.getString("class_name"),
+                		rs.getString("masteruser_id"),
+                		rs.getString("introduction"),
+                		rs.getString("requirement"),
+                		rs.getInt("count"),rs.getInt("total"));
+                return team;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -220,13 +195,17 @@ public class teamupDAO {
         return null;
     }
     
-    //teamid와 userid로 match 삭제
-    public boolean deleteMatch(String teamId, String userId) {
-        String sql = "DELETE FROM match WHERE team_id = ? AND id = ?";
+    // (UPDATE) TEAM INFO UPDATE
+    public boolean updateTeam(Teambean team) {
+        String sql = "UPDATE Team SET class_name = ?, masteruser_id = ?, introduction = ?, requirement = ?, count = ?, total = ? WHERE team_id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, teamId);
-            pstmt.setString(2, userId);
+            pstmt.setString(1, team.getClassName());
+            pstmt.setString(2, team.getMasteruser());
+            pstmt.setString(3, team.getIntro());
+            pstmt.setString(4, team.getReq());
+            pstmt.setInt(5, team.getCount());
+            pstmt.setInt(6, team.getTotal());
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -234,79 +213,25 @@ public class teamupDAO {
             return false;
         }
     }
-    
-    public Team[] getTeamsByClassName(String className) throws SQLException {
-        List<Team> teamList = new ArrayList<>();
-        String sql = "SELECT * FROM teams WHERE class_name = ?";
 
+    // (DELETE) teamid로 Team 정보 삭제
+    public boolean deleteTeam(String teamId) {
+        String sql = "DELETE FROM Team WHERE team_id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, className);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Team team = new Team();
-                    team.setTeamId(rs.getString("team_id"));
-                    team.setClassName(rs.getString("class_name"));
-                    team.setMasteruser(rs.getString("masteruser_id"));
-                    team.setIntro(rs.getString("introduction"));
-                    team.setReq(rs.getString("requirement"));
-                    team.setCount(rs.getInt("count"));
-                    team.setTotal(rs.getInt("total"));
-                    teamList.add(team);
-                }
-            }
-        }
-
-        // 리스트를 배열로 변환
-        Team[] teams = new Team[teamList.size()];
-        teams = teamList.toArray(teams);
-
-        return teams;
-    }
-
-    
-    public boolean isUserInClassTeam(String userId, String className) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            conn = getConnection(); // 데이터베이스 연결 메소드 호출
-            // 1단계: class_name을 바탕으로 Team 테이블에서 해당 수업의 팀들을 조회
-            String teamQuery = "SELECT team_id FROM Team WHERE class_name = ?";
-            pstmt = conn.prepareStatement(teamQuery);
-            pstmt.setString(1, className);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                String teamId = rs.getString("team_id");
-
-                // 2단계: 조회된 team_id와 넘겨받은 user_id를 이용하여 Match 테이블에서 확인
-                String matchQuery = "SELECT COUNT(*) FROM Match WHERE team_id = ? AND id = ?";
-                PreparedStatement pstmtMatch = conn.prepareStatement(matchQuery);
-                pstmtMatch.setString(1, teamId);
-                pstmtMatch.setString(2, userId);
-                ResultSet rsMatch = pstmtMatch.executeQuery();
-                if (rsMatch.next() && rsMatch.getInt(1) > 0) {
-                    return true; // 사용자가 해당 클래스의 팀에 속해 있음
-                }
-            }
-            return false; // 사용자가 해당 클래스의 어떤 팀에도 속해있지 않음
+            pstmt.setString(1, teamId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            // 자원 정리
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
+    /* TEAM TABLE CRUD END */
     
-    public boolean makeMatch(Matchbean match) {
+    /* MATCH TABLE CRUD */
+    // (CREATE) add match
+    public boolean addMatch(Matchbean match) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -348,67 +273,61 @@ public class teamupDAO {
             }
         }
     }
-
-    public boolean createTeam(String class_name, String masteruser_id, String introduction, 
-		      String requirement, int count, int total) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		try {
-		conn = getConnection(); // 데이터베이스 연결
-		
-		// 3단계: masteruser_id와 class_name을 바탕으로 makeMatch 함수 수행
-		Match match = new Match(class_name + masteruser_id, masteruser_id, introduction);
-		if (makeMatch(match)) {
-		// 4단계: makematch가 true이면 새로운 팀을 만들고 데이터베이스에 저장
-		String insertQuery = "INSERT INTO Team (team_id, class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		pstmt = conn.prepareStatement(insertQuery);
-		pstmt.setString(1, class_name + masteruser_id);
-		pstmt.setString(2, class_name);
-		pstmt.setString(3, masteruser_id);
-		pstmt.setString(4, introduction);
-		pstmt.setString(5, requirement);
-		pstmt.setInt(6, count);
-		pstmt.setInt(7, total);
-		int result = pstmt.executeUpdate();
-		return result > 0; // 팀 생성 성공 여부 반환
-		}
-		return false; // 이미 다른 팀에 속해있어 팀을 만들 수 없는 경우
-		} catch (SQLException e) {
-		e.printStackTrace();
-		return false;
-		} finally {
-		// 자원 정리
-		try {
-		if (pstmt != null) pstmt.close();
-		if (conn != null) conn.close();
-		} catch (SQLException e) {
-		e.printStackTrace();
-		}
-	}
-	}
-
     
-    public boolean login(String userId, String password) {
-        String query = "SELECT password FROM users WHERE id = ?";
+    // (READ) Return Team by teamId and userId
+    public Matchbean getMatch(String teamId, String userId) {
+        String query = "SELECT * FROM Match WHERE team_id = ? AND id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String dbPassword = rs.getString("password");
-                return dbPassword.equals(password); // 비밀번호 비교
-            } else {
-                return false; // 사용자 ID가 없음
+            pstmt.setString(1, teamId);
+            pstmt.setString(2, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Matchbean(rs.getString("team_id"), rs.getString("id"),
+                                     rs.getString("intro"));
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // (UPDATE) MATCH INFO UPDATE
+    public boolean updateMatch(Matchbean match) {
+        String query = "UPDATE Match SET intro = ? WHERE team_id = ? AND id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, match.getIntro());
+            pstmt.setString(2, match.getTeamId());
+            pstmt.setString(3, match.getUserId());
+            int result = pstmt.executeUpdate();
+            return result > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
     
-    public boolean makeApply(Applybean apply) {
+    // (DELETE) teamid와 userid로 match 삭제
+    public boolean deleteMatch(String teamId, String userId) {
+        String query = "DELETE FROM Match WHERE team_id = ? AND id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, teamId);
+            pstmt.setString(2, userId);
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /* MATCH TABLE CRUD END */
+    
+    /* APPLY TABLE CRUD */
+    // (CREATE) ADD APPLY
+    public boolean addApply(Applybean apply) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -450,21 +369,233 @@ public class teamupDAO {
             }
         }
     }
-    
-    //teamid와 userid로 match 삭제
-    public boolean deleteApply(String teamId, String userId) {
-        String sql = "DELETE FROM Apply WHERE team_id = ? AND id = ?";
+    // (READ) GET APPLY BY TEAMID AND USERID
+    public Applybean getApply(String teamId, String userId) {
+        String query = "SELECT * FROM Apply WHERE team_id = ? AND id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, teamId);
             pstmt.setString(2, userId);
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Applybean(rs.getString("team_id"), rs.getString("id"),
+                                     rs.getString("intro"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    // (UPDATE) APPLY INFO UPDATE
+    public boolean updateApply(Applybean apply) {
+        String query = "UPDATE Apply SET intro = ? WHERE team_id = ? AND id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, apply.getIntro());
+            pstmt.setString(2, apply.getTeamId());
+            pstmt.setString(3, apply.getUserId());
+            int result = pstmt.executeUpdate();
+            return result > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+    // (DELETE) DELETE APPLY
+    public boolean deleteApply(String teamId, String userId) {
+        String query = "DELETE FROM Apply WHERE team_id = ? AND id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, teamId);
+            pstmt.setString(2, userId);
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /* APPLY TABLE CRUD END */
+    
+    /* MEMBEROFTEAM TABLE CRUD */
+    // (CREATE) 
+    public boolean addMemberOfTeam(MemberOfTeambean member) {
+        String query = "INSERT INTO MemberOfTeam (id, team_id, name, phone, intro, grade, studentNum, major) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, member.getId());
+            pstmt.setString(2, member.getTeamId());
+            pstmt.setString(3, member.getName());
+            pstmt.setString(4, member.getPhone());
+            pstmt.setString(5, member.getIntro());
+            pstmt.setString(6, member.getGrade());
+            pstmt.setString(7, member.getStudentNum());
+            pstmt.setString(8, member.getMajor());
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // (READ) RETURN MEMOFTEAM BY ID AND TEAMID
+    public MemberOfTeambean getMemberOfTeam(String id, String teamId) {
+        String query = "SELECT * FROM MemberOfTeam WHERE id = ? AND team_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, id);
+            pstmt.setString(2, teamId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new MemberOfTeambean(rs.getString("id"), rs.getString("team_id"),
+                                            rs.getString("name"), rs.getString("phone"),
+                                            rs.getString("intro"), rs.getString("grade"),
+                                            rs.getString("studentNum"), rs.getString("major"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // (UPDATE) UPDATE MEMBEROFTEAM INFO
+    public boolean updateMemberOfTeam(MemberOfTeam member) {
+        String query = "UPDATE MemberOfTeam SET team_id = ?, name = ?, phone = ?, intro = ?, grade = ?, studentNum = ?, major = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, member.getTeamId());
+            pstmt.setString(2, member.getName());
+            pstmt.setString(3, member.getPhone());
+            pstmt.setString(4, member.getIntro());
+            pstmt.setString(5, member.getGrade());
+            pstmt.setString(6, member.getStudentNum());
+            pstmt.setString(7, member.getMajor());
+            pstmt.setString(8, member.getId());
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // (DELETE) DELETE MEMBEROFTEAM INFO
+    public boolean deleteMemberOfTeam(String id, String teamId) {
+        String query = "DELETE FROM MemberOfTeam WHERE id = ? AND team_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, id);
+            pstmt.setString(2, teamId);
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /* MEMBEROFTEAM TABLE CRUD END */
+    
+    /***************************************************************************************************/
+    
+    /* 기타 연산 */
+    
+    /***************************************************************************************************/
+    
+    //수업명을 바탕으로 해당 수업의 팀 배열 리턴
+    public Teambean[] getTeamsByClassName(String className) throws SQLException {
+        List<Teambean> teamList = new ArrayList<>();
+        String sql = "SELECT * FROM Team WHERE class_name = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, className);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Teambean team = new Teambean();
+                    team.setClassName(rs.getString("class_name"));
+                    team.setMasteruser(rs.getString("masteruser_id"));
+                    team.setIntro(rs.getString("introduction"));
+                    team.setReq(rs.getString("requirement"));
+                    team.setCount(rs.getInt("count"));
+                    team.setTotal(rs.getInt("total"));
+                    teamList.add(team);
+                }
+            }
+        }
+        // 리스트를 배열로 변환
+        Teambean[] teams = new Teambean[teamList.size()];
+        teams = teamList.toArray(teams);
+
+        return teams;
+    }
+
+    //해당 유저가 그 수업의 어떤 팀에라도 속해있는지를 검사
+    public boolean isUserInClassTeam(String userId, String className) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection(); // 데이터베이스 연결 메소드 호출
+            // 1단계: class_name을 바탕으로 Team 테이블에서 해당 수업의 팀들을 조회
+            String teamQuery = "SELECT team_id FROM Team WHERE class_name = ?";
+            pstmt = conn.prepareStatement(teamQuery);
+            pstmt.setString(1, className);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String teamId = rs.getString("team_id");
+
+                // 2단계: 조회된 team_id와 넘겨받은 user_id를 이용하여 Match 테이블에서 확인
+                String matchQuery = "SELECT COUNT(*) FROM Match WHERE team_id = ? AND id = ?";
+                PreparedStatement pstmtMatch = conn.prepareStatement(matchQuery);
+                pstmtMatch.setString(1, teamId);
+                pstmtMatch.setString(2, userId);
+                ResultSet rsMatch = pstmtMatch.executeQuery();
+                if (rsMatch.next() && rsMatch.getInt(1) > 0) {
+                    return true; // 사용자가 해당 클래스의 팀에 속해 있음
+                }
+            }
+            return false; // 사용자가 해당 클래스의 어떤 팀에도 속해있지 않음
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // 자원 정리
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    //로그인 성공 여부(id에 따른 비밀번호 일치 여부 검사)
+    public boolean login(String userId, String password) {
+        String query = "SELECT password FROM User WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("password");
+                return dbPassword.equals(password); // 비밀번호 비교
+            } else {
+                return false; // 사용자 ID가 없음
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+   
 }
 
 

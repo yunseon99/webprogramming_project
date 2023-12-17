@@ -1,7 +1,7 @@
 package com.teamupmodels.beans;
 
 public class Teambean {
-	private String Teambean_id;	//팀 고유 id
+	private String team_id;	//팀 고유 id
 	private String class_name;	//팀의 수업이름
 	private String masteruser_id; 	//팀장의 아이디. user테이블의 id필드
 	private String introduction;	//팀 소개
@@ -18,7 +18,7 @@ public class Teambean {
     public Teambean(String class_name, 
     		String masteruser_id, String introduction, String requirement,
     		int count, int total) {
-    	this.Teambean_id = class_name + masteruser_id;
+    	this.team_id = class_name + masteruser_id;
     	this.class_name = class_name;
     	this.masteruser_id = masteruser_id;
     	this.introduction = introduction;
@@ -26,13 +26,13 @@ public class Teambean {
     	this.count = count;
     	this.total = total;
     	members = new MemberOfTeambean[count];
-    	applicants = new MemberOfTeambean[100];
+    	applicants = new MemberOfTeambean[9];
     	apply_index = 0;
     }
     // Getter와 Setter 메소드
-    public String getTeambeanId() { return Teambean_id; }
+    public String getTeamId() { return team_id; }
 
-    public void setTeambeanId(String TeambeanId){this.Teambean_id = TeambeanId;}
+    public void setTeamId(){this.team_id = team_id = class_name + masteruser_id;}
 
     public String getClassName() {return class_name;}
 
