@@ -1,16 +1,32 @@
 package com.teamup.servlet;
 
-import javax.servlet.RequestDispatcher;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.teamupDB.dao.teamupDAO;
-import java.io.IOException;
-
+import com.teamupmodels.beans.*;
+/**
+ * Servlet implementation class CreateTeamServlet
+ */
+@WebServlet("/CreateTeamServlet")
 public class CreateTeamServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CreateTeamServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -37,9 +53,10 @@ public class CreateTeamServlet extends HttpServlet {
         teamupDAO dao = new teamupDAO();
         
         // Team 객체 생성 및 데이터 설정
-        boolean result = dao.createTeam(className, masteruserId, introduction, requirement, 1, total);
-
+        boolean result = dao.addTeam(className, masteruserId, introduction, requirement, 1, total);
+        
         if (result) {
+        	PrintWriter out = response.getWriter();
         	out.println("<script>\r\n"
         			+ "      alert(\"성공\");\r\n"
         			+ "       location.href= \"mainpage.jsp\";\r\n"
@@ -50,4 +67,5 @@ public class CreateTeamServlet extends HttpServlet {
             response.sendRedirect("MakeTeam.jsp"); 
         }
     }
+
 }

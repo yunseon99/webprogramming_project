@@ -1,18 +1,35 @@
 package com.teamup.servlet;
 
+import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.teamupDB.dao.teamupDAO;
-import com.teamupmodels.beans.Userbean;
-import java.io.IOException;
 
+import com.teamupDB.dao.teamupDAO;
+import com.teamupmodels.beans.*;
+
+/**
+ * Servlet implementation class RegisterServlet
+ */
+@WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // 폼에서 데이터 추출
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public RegisterServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 // 폼에서 데이터 추출
         String id = request.getParameter("id");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -22,8 +39,10 @@ public class RegisterServlet extends HttpServlet {
         // 비밀번호 일치 확인
         if (!password.equals(confirmPassword)) {
             // 비밀번호가 일치하지 않을 경우의 처리
-            response.getWriter().println("Passwords do not match.");
-            return; // 여기서 처리를 중단
+        	response.getWriter().println("<script>\r\n"
+        	        + "      alert(\"패스워드가 일치하지 않습니다!\");\r\n"
+        	        + "      window.location.href = 'MainPage.jsp';\r\n"
+        	        + "      </script>");
         }
 
         // User 객체 생성 및 데이터 설정
@@ -38,8 +57,11 @@ public class RegisterServlet extends HttpServlet {
             response.sendRedirect("MainPage.jsp"); // LOGIN URL
         } else {
             // 회원가입 실패 
-            response.getWriter().println("Registration failed. redundant ID");
-           
+            response.getWriter().println("<script>\r\n"
+        	        + "      alert(\"이미 존재하는 ID입니다!\");\r\n"
+        	        + "      window.location.href = 'MainPage.jsp';\r\n"
+        	        + "      </script>");
         }
-    }
+	}
+
 }

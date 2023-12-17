@@ -3,7 +3,7 @@ package com.teamupmodels.beans;
 public class Matchbean {
     private String teamId;
     private String userId;
-    private String intro; //팀에 지원할 때의 소개 및 각오
+    private String intro = null; //팀에 지원할 때의 소개 및 각오
     // 기본 생성자
     public Matchbean() {}
     public Matchbean(String teamId, String userId,String intro) {

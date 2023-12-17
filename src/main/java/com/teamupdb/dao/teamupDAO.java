@@ -8,11 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.teamupmodels.Userbean;
-import com.teamupmodels.Teambean;
-import com.teamupmodels.Matchbean;
-import com.teamupmodels.MemberOfTeambean;
-import com.teamupmodels.Applybean;
+import com.teamupmodels.beans.*;
 
 public class teamupDAO {
 	
@@ -144,8 +140,8 @@ public class teamupDAO {
 		conn = getConnection(); // 데이터베이스 연결
 		
 		// 3단계: masteruser_id와 class_name을 바탕으로 makeMatch 함수 수행
-		Match match = new Match(class_name + masteruser_id, masteruser_id, introduction);
-		if (makeMatch(match)) {
+		Matchbean match = new Matchbean(class_name + masteruser_id, masteruser_id, introduction);
+		if (addMatch(match)) {
 		// 4단계: makematch가 true이면 새로운 팀을 만들고 데이터베이스에 저장
 		String insertQuery = "INSERT INTO Team (class_name, masteruser_id, introduction, requirement, count, total) VALUES (?, ?, ?, ?, ?, ?)";
 		pstmt = conn.prepareStatement(insertQuery);
@@ -181,7 +177,7 @@ public class teamupDAO {
             pstmt.setString(1, teamId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                Teambean team = new Teambean(rs.getString("team_id"),
+                Teambean team = new Teambean(
                 		rs.getString("class_name"),
                 		rs.getString("masteruser_id"),
                 		rs.getString("introduction"),
@@ -274,7 +270,7 @@ public class teamupDAO {
         }
     }
     
-    // (READ) Return Team by teamId and userId
+    // (READ) Return MATCH by teamId and userId
     public Matchbean getMatch(String teamId, String userId) {
         String query = "SELECT * FROM Match WHERE team_id = ? AND id = ?";
         try (Connection conn = getConnection();
@@ -293,6 +289,51 @@ public class teamupDAO {
         return null;
     }
     
+    public Matchbean[] getMatchesByUserId(String userId) {
+        String query = "SELECT * FROM Match WHERE id = ?";
+        List<Matchbean> matches = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Matchbean match = new Matchbean(rs.getString("team_id"), rs.getString("id"),
+                                                    rs.getString("intro"));
+                    matches.add(match);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // Convert the list to an array and return
+        return matches.toArray(new Matchbean[0]);
+    }
+    
+    public Matchbean[] getMatchesByTeamId(String teamId) {
+        String query = "SELECT * FROM Match WHERE team_id = ?";
+        List<Matchbean> matches = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, teamId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Matchbean match = new Matchbean(rs.getString("team_id"), rs.getString("id"),
+                                                    rs.getString("intro"));
+                    matches.add(match);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // Convert the list to an array and return
+        return matches.toArray(new Matchbean[0]);
+    }
     // (UPDATE) MATCH INFO UPDATE
     public boolean updateMatch(Matchbean match) {
         String query = "UPDATE Match SET intro = ? WHERE team_id = ? AND id = ?";
@@ -387,6 +428,30 @@ public class teamupDAO {
         }
         return null;
     }
+    
+    public Applybean[] getApplyByTeamId(String userId) {
+        String query = "SELECT * FROM Apply WHERE team_id = ?";
+        List<Applybean> applies = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Applybean match = new Applybean(rs.getString("team_id"), rs.getString("id"),
+                                                    rs.getString("intro"));
+                    applies.add(match);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // Convert the list to an array and return
+        return applies.toArray(new Applybean[0]);
+    }
+    
     // (UPDATE) APPLY INFO UPDATE
     public boolean updateApply(Applybean apply) {
         String query = "UPDATE Apply SET intro = ? WHERE team_id = ? AND id = ?";
@@ -424,14 +489,14 @@ public class teamupDAO {
         String query = "INSERT INTO MemberOfTeam (id, team_id, name, phone, intro, grade, studentNum, major) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, member.getId());
-            pstmt.setString(2, member.getTeamId());
-            pstmt.setString(3, member.getName());
-            pstmt.setString(4, member.getPhone());
-            pstmt.setString(5, member.getIntro());
-            pstmt.setString(6, member.getGrade());
-            pstmt.setString(7, member.getStudentNum());
-            pstmt.setString(8, member.getMajor());
+            pstmt.setString(1, member.getMem_id());
+            pstmt.setString(2, member.getMem_teamid());
+            pstmt.setString(3, member.getMem_name());
+            pstmt.setString(4, member.getMem_phone());
+            pstmt.setString(5, member.getMem_intro());
+            pstmt.setString(6, member.getMem_Grade());
+            pstmt.setString(7, member.getMem_studentNum());
+            pstmt.setString(8, member.getMem_Major());
             int result = pstmt.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
@@ -461,19 +526,44 @@ public class teamupDAO {
         return null;
     }
     
+ // (READ 2) Return all MemberOfTeam records for a given userId as an array
+    public MemberOfTeambean getMembersOfTeamByUserId(String userId) {
+        String query = "SELECT * FROM MemberOfTeam WHERE id = ?";
+        MemberOfTeambean members = new MemberOfTeambean();
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    MemberOfTeambean member = new MemberOfTeambean(rs.getString("id"), rs.getString("team_id"),
+                                                                  rs.getString("name"), rs.getString("phone"),
+                                                                  rs.getString("intro"), rs.getString("grade"),
+                                                                  rs.getString("studentNum"), rs.getString("major"));
+                    members = member;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Convert the list to an array and return
+        return members;
+    }
     // (UPDATE) UPDATE MEMBEROFTEAM INFO
-    public boolean updateMemberOfTeam(MemberOfTeam member) {
+    public boolean updateMemberOfTeam(MemberOfTeambean member) {
         String query = "UPDATE MemberOfTeam SET team_id = ?, name = ?, phone = ?, intro = ?, grade = ?, studentNum = ?, major = ? WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, member.getTeamId());
-            pstmt.setString(2, member.getName());
-            pstmt.setString(3, member.getPhone());
-            pstmt.setString(4, member.getIntro());
-            pstmt.setString(5, member.getGrade());
-            pstmt.setString(6, member.getStudentNum());
-            pstmt.setString(7, member.getMajor());
-            pstmt.setString(8, member.getId());
+            pstmt.setString(1, member.getMem_teamid());
+            pstmt.setString(2, member.getMem_name());
+            pstmt.setString(3, member.getMem_phone());
+            pstmt.setString(4, member.getMem_intro());
+            pstmt.setString(5, member.getMem_Grade());
+            pstmt.setString(6, member.getMem_studentNum());
+            pstmt.setString(7, member.getMem_Major());
+            pstmt.setString(8, member.getMem_id());
             int result = pstmt.executeUpdate();
             return result > 0;
         } catch (SQLException e) {

@@ -36,7 +36,7 @@ public class MemberOfTeambean {
 	
 	//Setter
 	public void setMem_id(String id) {this.id = id;}
-	public void setMem_id(String id) {this.team_id = team_id;}
+	public void setMem_team_id(String team_id) {this.team_id = team_id;}
 	public void setMem_name(String name) {this.name = name;}
 	public void setMem_phone(String phone) {this.phone = phone;}
 	public void setMem_intro(String intro) {this.intro = intro;}

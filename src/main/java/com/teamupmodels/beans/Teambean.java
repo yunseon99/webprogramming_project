@@ -26,8 +26,9 @@ public class Teambean {
     	this.count = count;
     	this.total = total;
     	members = new MemberOfTeambean[count];
-    	applicants = new MemberOfTeambean[9];
+    	applicants = new MemberOfTeambean[total];
     	apply_index = 0;
+    	check = true;
     }
     // Getter와 Setter 메소드
     public String getTeamId() { return team_id; }
@@ -35,6 +36,8 @@ public class Teambean {
     public void setTeamId(){this.team_id = team_id = class_name + masteruser_id;}
 
     public String getClassName() {return class_name;}
+    
+    public void setClassName(String class_name) {this.class_name = class_name;}
 
     public String getMasteruser() {return masteruser_id;}
 
@@ -64,11 +67,11 @@ public class Teambean {
     
     public MemberOfTeambean[] getApplicants() {return applicants;}
     
-    public void setApplicants(MemberOfTeambean applicant) {this.applicants[apply_index++] = applicant;}
+    public void setApplicants(MemberOfTeambean[] applicant) {this.applicants = applicant;}
     
     public MemberOfTeambean[] getMembers() {return members;}
     
-    public void setMembers(MemberOfTeambean member) {this.members[count++ - 1] = member;}
+    public void setMembers(MemberOfTeambean[] member) {this.members  = member;}
 
     public boolean getCheck() {return check;}
     
